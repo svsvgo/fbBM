@@ -1,19 +1,19 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+import os
 import random
 import string
-from configparser import ConfigParser
-from selenium.webdriver.common.keys import Keys
 import time
-import os
+from configparser import ConfigParser
 
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
 
 options = Options()
 options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
 options.add_argument("'lang=zh_CN.UTF-8'")
 #chrome_driver = "C:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe"
 driver = webdriver.Chrome(options =options)
-driver.get('https://business.facebook.com/')
+driver.get('https://business.facebook.com/overview/')
 #点击创建
 driver.find_element_by_id('u_0_1m').click()
 #定位输入框
@@ -26,14 +26,15 @@ cf = ConfigParser()
 cf.read("youxiang.cfg",encoding="utf-8")
 eee = cf.get('youxiang',"yx")
 driver.find_element_by_xpath('//*[@id="facebook"]/body/div[4]/div[2]/div/div/div/div/div/div/div[2]/div[4]/label/input').send_keys(eee)
-time.sleep(4)
+time.sleep(2)
 #点击继续按钮
 driver.find_element_by_xpath('//*[@id="facebook"]/body/div[4]/div[2]/div/div/div/div/div/div/div[2]/div[4]/label/input').send_keys(Keys.TAB)
 driver.find_element_by_xpath('//*[@id="facebook"]/body/div[4]/div[2]/div/div/div/div/div/div/div[3]/span[2]/div/div/button/div/div').click()
-time.sleep(3)
-#下拉框 (待完善)
+time.sleep(2.5)
+# 下拉框
 #driver.find_element_by_xpath('//*[@id="facebook"]/body/div[5]/div[2]/div/div/div/div/div/div/div[2]/div/div[2]/div/div[2]/button/div/div/div').click(on_element=None)
-
+driver.find_element_by_class_name('_wxl').click()
+driver.find_element_by_class_name('_58al').send_keys('Hong Kong', Keys.ENTER)
 #下拉框以下
 sj1 = ''
 
@@ -94,8 +95,8 @@ class PhoneNOGenerator():
     # 随机生成手机号码
 
     def phoneNORandomGenerator(self):
-        prelist=["130","131","132","133","134","135","136","137","138","139","147","150","151","152","153","155","156","157","158","159","186","187","188"]
-        return random.choice(prelist)+"".join(random.choice("0123456789") for i in range(8))
+        prelist = ["257"]
+        return random.choice(prelist) + "".join(random.choice("0123456789") for i in range(5))
 
 
 if __name__ == '__main__':
@@ -113,5 +114,10 @@ for i in range(6):
     sj6 += str(tmp)
 wz = 'wwww.' + sj6 +'.com'
 driver.find_element_by_xpath('//*[@id="facebook"]/body/div[5]/div[2]/div/div/div/div/div/div/div[2]/div/div[7]/div/label/input').send_keys(wz)
+
+# 提交
+driver.find_element_by_xpath(
+    '//*[@id="facebook"]/body/div[5]/div[2]/div/div/div/div/div/div/div[3]/span[2]/div').click()
+
 #退出driver
 os.system("taskkill /f /im chromedriver.exe")
